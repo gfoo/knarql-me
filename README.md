@@ -1,8 +1,10 @@
-# KnarqlMe
+# KnarQL me!
+
+[![Build Status](https://travis-ci.org/gfoo/knarql-me.svg?branch=master)](https://travis-ci.org/gfoo/knarql-me)
 
 A simple web app to test KnarQL queries.
 
-To test it, just run its container:
+Just run its container:
 
 ```
 docker run -p 80:80 gfoo/knarql-me
