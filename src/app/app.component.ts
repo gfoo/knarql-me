@@ -1,7 +1,9 @@
 import { Component, isDevMode } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/timeout';
+import { parseURL } from 'universal-parse-url';
 
 const {
   version: appVersionLoaded,
@@ -28,13 +30,28 @@ CONSTRUCT {
   ?s a ll:FreeContent .
 }`;
   isLaunched = false;
-
   jsonResult = null;
   rawResult = null;
+
+  login;
+  password;
+  isLogLaunched = false;
+  token;
 
   constructor(private http: HttpClient) {}
 
   onSubmit() {
+    let httpOptions = {};
+    if (this.token) {
+      httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + this.token
+        })
+      };
+      console.log(httpOptions);
+    }
+
     this.jsonResult = null;
     this.rawResult = null;
     this.isLaunched = true;
@@ -42,9 +59,11 @@ CONSTRUCT {
       .get(
         this.endpoint +
           (!this.endpoint.endsWith('/') ? '/' : '') +
-          encodeURIComponent(this.knarql)
+          encodeURIComponent(this.knarql),
+        httpOptions
       )
-      //  .delay(3000)
+      .delay(3000)
+      .timeout(30000)
       .subscribe(
         res => {
           this.jsonResult = res;
@@ -57,5 +76,50 @@ CONSTRUCT {
           this.isLaunched = false;
         }
       );
+  }
+
+  onLogin() {
+    // const url = new URL(this.endpoint);
+    const url = parseURL(this.endpoint);
+    const authURL = url.host + '/' + 'v2/authentication';
+    console.log(authURL);
+    this.isLogLaunched = true;
+    if (this.token) {
+      this.http
+        .delete(authURL, {
+          headers: new HttpHeaders({
+            'Content-Type': 'application/json',
+            Authorization: this.token
+          })
+        })
+        .subscribe(
+          res => {
+            this.token = null;
+            this.isLogLaunched = false;
+          },
+          error => {
+            this.token = null;
+            this.isLogLaunched = false;
+            window.alert(error.message);
+          }
+        );
+    } else {
+      this.http
+        .post(authURL, {
+          email: this.login,
+          password: this.password
+        })
+        .subscribe(
+          (token: any) => {
+            this.token = token;
+            this.isLogLaunched = false;
+          },
+          error => {
+            this.token = null;
+            this.isLogLaunched = false;
+            window.alert(error.message);
+          }
+        );
+    }
   }
 }

@@ -12,46 +12,74 @@
     <div class="card-body">
 
       <form #knarqlmeForm="ngForm" (ngSubmit)="onSubmit()">
+
         <div class="form-group">
-          <label for="endpoint">Endpoint:</label>
-          <input [disabled]="isLaunched" type="url" class="form-control" id="endpoint" required [(ngModel)]="endpoint" name="endpoint"
-            #endpoint_="ngModel">
+          <input [disabled]="isLaunched" type="url" class="form-control"
+            id="endpoint" required [(ngModel)]="endpoint"
+            name="endpoint" #endpoint_="ngModel">
           <div [hidden]="endpoint_.valid || isLaunched" class="alert alert-danger">
             URL of v2/searchextended endpoint is required
           </div>
         </div>
+
+        <form #loginForm="ngForm" (ngSubmit)="onLogin()" class="form-inline">
+          <div class="form-group">
+            <label for="login">Login:</label>
+            <input [disabled]="isLaunched || token || isLogLaunched"
+              type="text" class="form-control mx-sm-1"
+              id="login" [(ngModel)]="login" name="login"
+              #login_="ngModel">
+          </div>
+          <div class="form-group">
+            <label for="password">Password:</label>
+            <input [disabled]="isLaunched || token || isLogLaunched"
+              type="password" class="form-control mx-sm-1"
+              id="password" [(ngModel)]="password" name="password"
+              #password_="ngModel">
+          </div>
+          <button type="submit" class="login-btn btn btn-success mx-sm-1"
+            [disabled]="token || isLaunched || isLogLaunched">Login</button>
+          <button type="submit" class="login-btn btn btn-danger mx-sm-1"
+            [disabled]="!token || isLaunched || isLogLaunched">Logout</button>
+          <div *ngIf="isLogLaunched" class="loader"></div>
+        </form>
+
+        <br>
+
         <div class="form-group">
-          <label for="knarql">KnarQL:</label>
-          <textarea [disabled]="isLaunched" rows="10" type="text" class="form-control" id="knarql" required [(ngModel)]="knarql"
-            name="knarql" #knarql_="ngModel"></textarea>
+          <textarea [disabled]="isLaunched" rows="10" type="text"
+            class="form-control" id="knarql" required
+            [(ngModel)]="knarql" name="knarql" #knarql_="ngModel"></textarea>
         </div>
         <div [hidden]="knarql_.valid || isLaunched" class="alert alert-danger">
           KnarQL query is required
         </div>
+
         <div style="display: flex;">
-            <button type="submit" class="btn btn-success" [disabled]="!knarqlmeForm.form.valid || isLaunched">Launch</button>
-            <div  *ngIf="isLaunched" class="loader"></div>
+          <button type="submit" class="btn btn-success" [disabled]="!knarqlmeForm.form.valid || isLaunched">Launch</button>
+          <div *ngIf="isLaunched" class="loader"></div>
         </div>
+
       </form>
     </div>
   </div>
 
-    <div class="card">
-      <div class="card-header">
-        <h5>Results</h5>
-      </div>
-      <div class="card-body">
-        <ngb-tabset *ngIf="jsonResult || rawResult">
-          <ngb-tab title="Tree">
-            <ng-template ngbTabContent *ngIf="jsonResult">
-              <ngx-json-viewer [json]="jsonResult"></ngx-json-viewer>
-            </ng-template>
-          </ngb-tab>
-          <ngb-tab title="Raw">
-            <ng-template ngbTabContent *ngIf="rawResult">
-              <pre><![CDATA[{{rawResult}}]]></pre>
-            </ng-template>
-          </ngb-tab>
-        </ngb-tabset>
-      </div>
+  <div class="card">
+    <div class="card-header">
+      <h5>Results</h5>
+    </div>
+    <div class="card-body">
+      <ngb-tabset *ngIf="jsonResult || rawResult">
+        <ngb-tab title="Tree">
+          <ng-template ngbTabContent *ngIf="jsonResult">
+            <ngx-json-viewer [json]="jsonResult"></ngx-json-viewer>
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Raw">
+          <ng-template ngbTabContent *ngIf="rawResult">
+            <pre><![CDATA[{{rawResult}}]]></pre>
+          </ng-template>
+        </ngb-tab>
+      </ngb-tabset>
+    </div>
   </div>
