@@ -1,20 +1,57 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+<div class="container">
+  <h1>KnarQL me!</h1>
+  <p>
+    <a [href]="appHomePage" target="_blank">Github project</a> (Running version {{appVersion}}{{devMode}})</p>
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
 
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <h5>Query</h5>
+    </div>
+    <div class="card-body">
+
+      <form #knarqlmeForm="ngForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="endpoint">Endpoint:</label>
+          <input [disabled]="isLaunched" type="url" class="form-control" id="endpoint" required [(ngModel)]="endpoint" name="endpoint"
+            #endpoint_="ngModel">
+          <div [hidden]="endpoint_.valid || isLaunched" class="alert alert-danger">
+            URL of v2/searchextended endpoint is required
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="knarql">KnarQL:</label>
+          <textarea [disabled]="isLaunched" rows="10" type="text" class="form-control" id="knarql" required [(ngModel)]="knarql"
+            name="knarql" #knarql_="ngModel"></textarea>
+        </div>
+        <div [hidden]="knarql_.valid || isLaunched" class="alert alert-danger">
+          KnarQL query is required
+        </div>
+        <div style="display: flex;">
+            <button type="submit" class="btn btn-success" [disabled]="!knarqlmeForm.form.valid || isLaunched">Launch</button>
+            <div  *ngIf="isLaunched" class="loader"></div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h5>Results</h5>
+      </div>
+      <div class="card-body">
+        <ngb-tabset *ngIf="jsonResult || rawResult">
+          <ngb-tab title="Tree">
+            <ng-template ngbTabContent *ngIf="jsonResult">
+              <ngx-json-viewer [json]="jsonResult"></ngx-json-viewer>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab title="Raw">
+            <ng-template ngbTabContent *ngIf="rawResult">
+              <pre><![CDATA[{{rawResult}}]]></pre>
+            </ng-template>
+          </ngb-tab>
+        </ngb-tabset>
+      </div>
+  </div>
