@@ -49,7 +49,6 @@ CONSTRUCT {
           Authorization: 'Bearer ' + this.token
         })
       };
-      console.log(httpOptions);
     }
 
     this.jsonResult = null;
@@ -82,14 +81,13 @@ CONSTRUCT {
     // const url = new URL(this.endpoint);
     const url = parseURL(this.endpoint);
     const authURL = url.host + '/' + 'v2/authentication';
-    console.log(authURL);
     this.isLogLaunched = true;
     if (this.token) {
       this.http
         .delete(authURL, {
           headers: new HttpHeaders({
             'Content-Type': 'application/json',
-            Authorization: this.token
+            Authorization: 'Bearer ' + this.token
           })
         })
         .subscribe(
