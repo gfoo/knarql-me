@@ -14,6 +14,7 @@ Or for developers:
 
 ```
 git clone https://github.com/gfoo/knarql-me.git
+cd knarql-me
 yarn
 ng s
 ```
