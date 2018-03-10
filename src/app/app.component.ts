@@ -61,7 +61,7 @@ CONSTRUCT {
           encodeURIComponent(this.knarql),
         httpOptions
       )
-      .delay(3000)
+      // .delay(3000)
       .timeout(30000)
       .subscribe(
         res => {
@@ -73,6 +73,7 @@ CONSTRUCT {
           this.jsonResult = error;
           this.rawResult = JSON.stringify(error, null, 2);
           this.isLaunched = false;
+          console.log(error);
         }
       );
   }
@@ -99,6 +100,7 @@ CONSTRUCT {
             this.token = null;
             this.isLogLaunched = false;
             window.alert(error.message);
+            console.log(error);
           }
         );
     } else {
@@ -116,6 +118,7 @@ CONSTRUCT {
             this.token = null;
             this.isLogLaunched = false;
             window.alert(error.message);
+            console.log(error);
           }
         );
     }
