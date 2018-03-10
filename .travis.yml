@@ -34,7 +34,7 @@ install:
 script:
   - ng test --watch false
 #  - ng e2e
-deploy:
+after_success:
   - docker build -t gfoo/knarql-me .
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
   - docker push gfoo/knarql-me
