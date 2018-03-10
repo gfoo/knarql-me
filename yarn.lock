@@ -208,7 +208,7 @@
   dependencies:
     "@types/jasmine" "*"
 
-"@types/node@^6.0.46", "@types/node@~6.0.60":
+"@types/node@^6.0.46":
   version "6.0.101"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.101.tgz#0c5911cfb434af4a51c0a499931fe6423207d921"
 
@@ -6597,6 +6597,10 @@ unique-slug@^2.0.0:
   resolved "https://registry.yarnpkg.com/unique-slug/-/unique-slug-2.0.0.tgz#db6676e7c7cc0629878ff196097c78855ae9f4ab"
   dependencies:
     imurmurhash "^0.1.4"
+
+universal-parse-url@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/universal-parse-url/-/universal-parse-url-1.0.2.tgz#db97b4dc41fe22d7538044e06bfb077b7f6e1acf"
 
 universalify@^0.1.0:
   version "0.1.1"
