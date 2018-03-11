@@ -81,7 +81,7 @@ CONSTRUCT {
   onLogin() {
     // const url = new URL(this.endpoint);
     const url = parseURL(this.endpoint);
-    const authURL = url.host + '/' + 'v2/authentication';
+    const authURL = url.protocol + '//' + url.host + '/' + 'v2/authentication';
     this.isLogLaunched = true;
     if (this.token) {
       this.http
@@ -110,8 +110,8 @@ CONSTRUCT {
           password: this.password
         })
         .subscribe(
-          (token: any) => {
-            this.token = token;
+          (res: any) => {
+            this.token = res.token;
             this.isLogLaunched = false;
           },
           error => {
