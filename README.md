@@ -12,7 +12,7 @@ Just run its container:
 docker run -p 80:80 gfoo/knarql-me
 ```
 
-and visit http://localhost
+and visit http://0.0.0.0
 
 Or for developers:
 
@@ -23,4 +23,4 @@ yarn
 ng s
 ```
 
-and visit http://localhost:4200
+and visit http://0.0.0.0:4200
