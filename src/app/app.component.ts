@@ -29,6 +29,9 @@ CONSTRUCT {
   ?s a knora-api:Resource .
   ?s a ll:FreeContent .
 }`;
+  availableMethods = ['POST sparql-query', 'POST json', 'GET'];
+  httpMethod;
+
   isLaunched = false;
   jsonResult = null;
   rawResult = null;
@@ -51,6 +54,8 @@ CONSTRUCT {
       };
     }
 
+    console.log(this.httpMethod);
+
     this.jsonResult = null;
     this.rawResult = null;
     this.isLaunched = true;
@@ -61,7 +66,7 @@ CONSTRUCT {
           encodeURIComponent(this.knarql),
         httpOptions
       )
-      // .delay(3000)
+      //.delay(3000)
       .timeout(30000)
       .subscribe(
         res => {

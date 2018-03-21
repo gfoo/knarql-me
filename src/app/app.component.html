@@ -26,22 +26,23 @@
           <div class="form-group">
             <label for="login">Login:</label>
             <input [disabled]="isLaunched || token || isLogLaunched"
-              type="text" class="form-control mx-sm-1"
+              type="text" class="form-control-sm mx-sm-1"
               id="login" [(ngModel)]="login" name="login"
               #login_="ngModel">
           </div>
           <div class="form-group">
             <label for="password">Password:</label>
             <input [disabled]="isLaunched || token || isLogLaunched"
-              type="password" class="form-control mx-sm-1"
+              type="password" class="form-control-sm mx-sm-1"
               id="password" [(ngModel)]="password" name="password"
               #password_="ngModel">
           </div>
-          <button type="submit" class="login-btn btn btn-success mx-sm-1"
+          <button type="submit" class="login-btn btn-sm btn-success mx-sm-1"
             [disabled]="token || isLaunched || isLogLaunched">Login</button>
-          <button type="submit" class="login-btn btn btn-danger mx-sm-1"
+          <button type="submit" class="login-btn btn-sm btn-danger mx-sm-1"
             [disabled]="!token || isLaunched || isLogLaunched">Logout</button>
           <div *ngIf="isLogLaunched" class="loader"></div>
+          <label *ngIf="token">(you are logged)</label>
         </form>
 
         <br>
@@ -56,8 +57,17 @@
         </div>
 
         <div style="display: flex;">
-          <button type="submit" class="btn btn-success" [disabled]="!knarqlmeForm.form.valid || isLaunched">Launch</button>
-          <div *ngIf="isLaunched" class="loader"></div>
+          <div class="input-group">
+            <select class="form-control" id="httpMethod" required
+              class="custom-select-sm" [(ngModel)]="httpMethod"
+              name="httpMethod">
+              <option value="{{m}}" *ngFor="let m of availableMethods">{{m}}</option>
+            </select>
+            <div class="input-group-append">
+              <button type="submit" class="btn-sm btn-success" [disabled]="!knarqlmeForm.form.valid || isLaunched">Launch</button>
+            </div>
+            <div *ngIf="isLaunched" class="loader"></div>
+          </div>
         </div>
 
       </form>
