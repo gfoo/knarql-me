@@ -11,7 +11,7 @@
     </div>
     <div class="card-body">
 
-      <form #knarqlmeForm="ngForm" (ngSubmit)="onSubmit()">
+      <form #knarqlmeForm="ngForm" (ngSubmit)="onLaunch()">
 
         <div class="form-group">
           <input [disabled]="isLaunched" type="url" class="form-control"
@@ -22,7 +22,7 @@
           </div>
         </div>
 
-        <form #loginForm="ngForm" (ngSubmit)="onLogin()" class="form-inline">
+        <form #loginForm="ngForm" (ngSubmit)="connection()" class="form-inline">
           <div class="form-group">
             <label for="login">Login:</label>
             <input [disabled]="isLaunched || token || isLogLaunched"
