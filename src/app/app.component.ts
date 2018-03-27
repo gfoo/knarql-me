@@ -29,6 +29,9 @@ CONSTRUCT {
   ?s a knora-api:Resource .
   ?s a ll:FreeContent .
 }`;
+  availableMethods = ['POST sparql-query', 'POST json', 'GET'];
+  httpMethod;
+
   isLaunched = false;
   jsonResult = null;
   rawResult = null;
@@ -40,17 +43,7 @@ CONSTRUCT {
 
   constructor(private http: HttpClient) {}
 
-  onSubmit() {
-    let httpOptions = {};
-    if (this.token) {
-      httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + this.token
-        })
-      };
-    }
-
+  getMethod(headers: HttpHeaders) {
     this.jsonResult = null;
     this.rawResult = null;
     this.isLaunched = true;
@@ -59,9 +52,11 @@ CONSTRUCT {
         this.endpoint +
           (!this.endpoint.endsWith('/') ? '/' : '') +
           encodeURIComponent(this.knarql),
-        httpOptions
+        {
+          headers: headers
+        }
       )
-      // .delay(3000)
+      //.delay(3000)
       .timeout(30000)
       .subscribe(
         res => {
@@ -78,49 +73,118 @@ CONSTRUCT {
       );
   }
 
-  onLogin() {
-    // const url = new URL(this.endpoint);
+  postMethod(headers: HttpHeaders, payload) {
+    this.jsonResult = null;
+    this.rawResult = null;
+    this.isLaunched = true;
+
+    console.log(headers);
+
+    this.http
+      .post(this.endpoint, payload, {
+        headers: headers
+      })
+      //.delay(3000)
+      .timeout(30000)
+      .subscribe(
+        res => {
+          this.jsonResult = res;
+          this.rawResult = JSON.stringify(res, null, 2);
+          this.isLaunched = false;
+        },
+        error => {
+          this.jsonResult = error;
+          this.rawResult = JSON.stringify(error, null, 2);
+          this.isLaunched = false;
+          console.log(error);
+        }
+      );
+  }
+
+  postJsonMethod(headers: HttpHeaders) {
+    headers = headers.set('Content-Type', 'application/json');
+    this.postMethod(headers, { query: this.knarql });
+  }
+
+  postSparqlMethod(headers: HttpHeaders) {
+    headers = headers.set('Content-Type', 'application/knarql-query');
+    console.log(headers);
+    this.postMethod(headers, this.knarql);
+  }
+
+  onLaunch() {
+    let headers = new HttpHeaders({});
+    if (this.token) {
+      headers = headers.set('Authorization', 'Bearer ' + this.token);
+    }
+
+    switch (this.httpMethod) {
+      case 'GET': {
+        this.getMethod(headers);
+        break;
+      }
+      case 'POST json': {
+        this.postJsonMethod(headers);
+        break;
+      }
+      case 'POST sparql-query': {
+        this.postSparqlMethod(headers);
+        break;
+      }
+    }
+  }
+
+  signout(authURL) {
+    this.isLogLaunched = true;
+    this.http
+      .delete(authURL, {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + this.token
+        })
+      })
+      .subscribe(
+        res => {
+          this.token = null;
+          this.isLogLaunched = false;
+        },
+        error => {
+          this.token = null;
+          this.isLogLaunched = false;
+          window.alert(error.message);
+          console.log(error);
+        }
+      );
+  }
+
+  signin(authURL) {
+    this.isLogLaunched = true;
+    this.http
+      .post(authURL, {
+        email: this.login,
+        password: this.password
+      })
+      .subscribe(
+        (res: any) => {
+          this.token = res.token;
+          this.isLogLaunched = false;
+        },
+        error => {
+          this.token = null;
+          this.isLogLaunched = false;
+          window.alert(error.message);
+          console.log(error);
+        }
+      );
+  }
+
+  connection() {
     const url = parseURL(this.endpoint);
     const authURL = url.protocol + '//' + url.host + '/' + 'v2/authentication';
-    this.isLogLaunched = true;
     if (this.token) {
-      this.http
-        .delete(authURL, {
-          headers: new HttpHeaders({
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + this.token
-          })
-        })
-        .subscribe(
-          res => {
-            this.token = null;
-            this.isLogLaunched = false;
-          },
-          error => {
-            this.token = null;
-            this.isLogLaunched = false;
-            window.alert(error.message);
-            console.log(error);
-          }
-        );
+      this.signout(authURL);
     } else {
-      this.http
-        .post(authURL, {
-          email: this.login,
-          password: this.password
-        })
-        .subscribe(
-          (res: any) => {
-            this.token = res.token;
-            this.isLogLaunched = false;
-          },
-          error => {
-            this.token = null;
-            this.isLogLaunched = false;
-            window.alert(error.message);
-            console.log(error);
-          }
-        );
+      this.signin(authURL);
     }
   }
 }
