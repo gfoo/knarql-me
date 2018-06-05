@@ -1,6 +1,5 @@
-import { Component, isDevMode } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Component, isDevMode } from '@angular/core';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/timeout';
 import { parseURL } from 'universal-parse-url';
@@ -29,7 +28,8 @@ CONSTRUCT {
   ?s a knora-api:Resource .
   ?s a ll:FreeContent .
 }`;
-  availableMethods = ['POST sparql-query', 'POST json', 'GET'];
+
+  availableMethods = ['POST sparql-query', 'GET'];
   httpMethod;
 
   isLaunched = false;
@@ -68,7 +68,7 @@ CONSTRUCT {
           this.jsonResult = error;
           this.rawResult = JSON.stringify(error, null, 2);
           this.isLaunched = false;
-          console.log(error);
+          console.error(error);
         }
       );
   }
@@ -78,10 +78,11 @@ CONSTRUCT {
     this.rawResult = null;
     this.isLaunched = true;
 
-    console.log(headers);
+    let url = this.endpoint.trim();
+    url = url.endsWith('/') ? url.substring(0, url.length - 1) : url;
 
     this.http
-      .post(this.endpoint, payload, {
+      .post(url, payload, {
         headers: headers
       })
       //.delay(3000)
@@ -96,19 +97,13 @@ CONSTRUCT {
           this.jsonResult = error;
           this.rawResult = JSON.stringify(error, null, 2);
           this.isLaunched = false;
-          console.log(error);
+          console.error(error);
         }
       );
   }
 
-  postJsonMethod(headers: HttpHeaders) {
-    headers = headers.set('Content-Type', 'application/json');
-    this.postMethod(headers, { query: this.knarql });
-  }
-
   postSparqlMethod(headers: HttpHeaders) {
-    headers = headers.set('Content-Type', 'application/knarql-query');
-    console.log(headers);
+    headers = headers.set('Content-Type', 'application/sparql-query');
     this.postMethod(headers, this.knarql);
   }
 
@@ -121,10 +116,6 @@ CONSTRUCT {
     switch (this.httpMethod) {
       case 'GET': {
         this.getMethod(headers);
-        break;
-      }
-      case 'POST json': {
-        this.postJsonMethod(headers);
         break;
       }
       case 'POST sparql-query': {
@@ -152,7 +143,7 @@ CONSTRUCT {
           this.token = null;
           this.isLogLaunched = false;
           window.alert(error.message);
-          console.log(error);
+          console.error(error);
         }
       );
   }
@@ -173,7 +164,7 @@ CONSTRUCT {
           this.token = null;
           this.isLogLaunched = false;
           window.alert(error.message);
-          console.log(error);
+          console.error(error);
         }
       );
   }
