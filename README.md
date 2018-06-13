@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.org/gfoo/knarql-me.svg?branch=master)](https://travis-ci.org/gfoo/knarql-me)
 
-A simple web app to test [KnarQL queries](http://www.knora.org/documentation/manual/rst/03-knora-api-server/api_v2/knarql-syntax.html).
+A simple web app to test [~~KnarQL~~ Gravsearch queries](http://www.knora.org/documentation/manual/rst/03-knora-api-server/api_v2/knarql-syntax.html).
 
-![alt text](screenshot.png "App screenshot")
+![alt text](screenshot.png 'App screenshot')
 
 Just run its container:
 

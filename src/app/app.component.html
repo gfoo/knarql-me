@@ -1,5 +1,6 @@
 <div class="container">
-  <h1>KnarQL me!</h1>
+  <h1>
+    <s>KnarQL</s>Gravsearch me!</h1>
   <p>
     <a [href]="appHomePage" target="_blank">Github project</a> (Running version {{appVersion}}{{devMode}})</p>
 </div>
@@ -11,7 +12,7 @@
     </div>
     <div class="card-body">
 
-      <form #knarqlmeForm="ngForm" (ngSubmit)="onLaunch()">
+      <form #querymeForm="ngForm" (ngSubmit)="onLaunch()">
 
         <div class="form-group">
           <input [disabled]="isLaunched" type="url" class="form-control"
@@ -22,7 +23,8 @@
           </div>
         </div>
 
-        <form #loginForm="ngForm" (ngSubmit)="connection()" class="form-inline">
+        <form #loginForm="ngForm" (ngSubmit)="connection()"
+          class="form-inline">
           <div class="form-group">
             <label for="login">Login:</label>
             <input [disabled]="isLaunched || token || isLogLaunched"
@@ -49,22 +51,27 @@
 
         <div class="form-group">
           <textarea [disabled]="isLaunched" rows="10" type="text"
-            class="form-control" id="knarql" required
-            [(ngModel)]="knarql" name="knarql" #knarql_="ngModel"></textarea>
+            class="form-control" id="query" required
+            [(ngModel)]="query" name="query" #query_="ngModel"></textarea>
         </div>
-        <div [hidden]="knarql_.valid || isLaunched" class="alert alert-danger">
-          KnarQL query is required
+        <div [hidden]="query_.valid || isLaunched" class="alert alert-danger">
+          Query is required
         </div>
 
         <div style="display: flex;">
           <div class="input-group">
+            <select class="form-control" id="acceptMethod" required
+              class="custom-select-sm" [(ngModel)]="acceptMethod"
+              name="acceptMethod">
+              <option value="{{m}}" *ngFor="let m of acceptMethods">{{m}}</option>
+            </select>
             <select class="form-control" id="httpMethod" required
               class="custom-select-sm" [(ngModel)]="httpMethod"
               name="httpMethod">
               <option value="{{m}}" *ngFor="let m of availableMethods">{{m}}</option>
             </select>
             <div class="input-group-append">
-              <button type="submit" class="btn-sm btn-success" [disabled]="!knarqlmeForm.form.valid || isLaunched">Launch</button>
+              <button type="submit" class="btn-sm btn-success" [disabled]="!querymeForm.form.valid || isLaunched">Launch</button>
             </div>
             <div *ngIf="isLaunched" class="loader"></div>
           </div>
@@ -79,15 +86,15 @@
       <h5>Results</h5>
     </div>
     <div class="card-body">
-      <ngb-tabset *ngIf="jsonResult || rawResult">
-        <ngb-tab title="Tree">
-          <ng-template ngbTabContent *ngIf="jsonResult">
-            <ngx-json-viewer [json]="jsonResult"></ngx-json-viewer>
+      <ngb-tabset>
+        <ngb-tab title="Raw">
+          <ng-template ngbTabContent>
+            <pre>{{rawResult}}</pre>
           </ng-template>
         </ngb-tab>
-        <ngb-tab title="Raw">
-          <ng-template ngbTabContent *ngIf="rawResult">
-            <pre><![CDATA[{{rawResult}}]]></pre>
+        <ngb-tab title="Json">
+          <ng-template ngbTabContent>
+            <ngx-json-viewer [json]="jsonResult ? jsonResult : {}"></ngx-json-viewer>
           </ng-template>
         </ngb-tab>
       </ngb-tabset>
