@@ -1,4 +1,4 @@
-# KnarQL me!
+# ~~KnarQL~~ Gravsearch me!
 
 [![Build Status](https://travis-ci.org/gfoo/knarql-me.svg?branch=master)](https://travis-ci.org/gfoo/knarql-me)
 
