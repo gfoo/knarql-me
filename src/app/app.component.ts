@@ -44,7 +44,7 @@ CONSTRUCT {
   constructor(private http: HttpClient) {}
 
   result(res) {
-    console.log('result:', res);
+    // console.log('result:', res);
     if (this.acceptMethod === 'application/ld+json') {
       this.jsonResult = JSON.parse(res);
       this.rawResult = JSON.stringify(this.jsonResult, null, 2);
